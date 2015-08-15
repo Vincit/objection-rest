@@ -310,6 +310,30 @@ describe('integration tests', function () {
 
         });
 
+        describe('DELETE /persons/:id/parent', function () {
+
+          it('should delete person\'s parent', function () {
+            return request
+              .del('http://localhost:3564/persons/4/parent')
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.eql({});
+                return session.knex('Person')
+              })
+              .then(function (rows) {
+                _.each(rows, function (row) {
+                  row.id = parseInt(row.id, 10);
+                  if (row.pid) {
+                    row.pid = parseInt(row.pid, 10);
+                  }
+                });
+                expect(rows).to.have.length(numPersons - 1);
+                expect(_.pluck(rows, 'id').sort()).to.eql(_.without(_.range(1, 11), 3).sort());
+              });
+          });
+
+        });
+
         describe('POST /persons/:id/pets', function () {
 
           it('should add new pet for a person', function () {
@@ -355,6 +379,27 @@ describe('integration tests', function () {
                 expect(res.status).to.equal(200);
                 expect(_.pluck(res.body.results, 'name')).to.eql(['P36', 'P35']);
                 expect(res.body.total).to.equal(4);
+              });
+          });
+
+        });
+
+        describe('DELETE /persons/:id/pets', function () {
+
+          it('should delete all person\'s pets', function () {
+            return request
+              .del('http://localhost:3564/persons/4/pets')
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.eql({});
+                return [
+                  Person.fromJson({id: 4}, {patch: true}).$relatedQuery('pets'),
+                  session.knex('Animal')
+                ];
+              })
+              .spread(function (models, rows) {
+                expect(models).to.have.length(0);
+                expect(rows).to.have.length((numPersons - 1) * numAnimalsPerPerson);
               });
           });
 
@@ -412,6 +457,27 @@ describe('integration tests', function () {
                 expect(res.status).to.equal(200);
                 expect(_.pluck(res.body.results, 'name')).to.eql(['M36', 'M35']);
                 expect(res.body.total).to.equal(4);
+              });
+          });
+
+        });
+
+        describe('DELETE /persons/:id/movies', function () {
+
+          it('should delete all person\'s movies', function () {
+            return request
+              .del('http://localhost:3564/persons/4/movies')
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body).to.eql({});
+                return [
+                  Person.fromJson({id: 4}, {patch: true}).$relatedQuery('movies'),
+                  session.knex('Movie')
+                ];
+              })
+              .spread(function (models, rows) {
+                expect(models).to.have.length(0);
+                expect(rows).to.have.length((numPersons - 1) * numMoviesPerPerson);
               });
           });
 

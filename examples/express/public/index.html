@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Objection find example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+  <script>
+    angular.module('app', []).run(['$http', function ($http) {
+      $http({
+        method: 'GET',
+        url: 'https://maps.googleapis.com/maps/api/timezone/json',
+        params: {
+          location: '39.6034810,-119.6822510',
+          timestamp: '1331161200',
+          key: 'AIzaSyDzhqFrcPc5NVpFx5nkAmxjcxziElmi0NE'
+        }
+      }).then(function (res) {
+        console.log(res.data);
+      });
+    }]);
+  </script>
+</head>
+<body>
+
+</body>
+</html>

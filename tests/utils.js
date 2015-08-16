@@ -12,6 +12,13 @@ module.exports = {
     client: 'sqlite3',
     connection: {
       filename: path.join(os.tmpdir(), 'objection_rest_test.db')
+    },
+    pool: {
+      afterCreate: function (conn, cb) {
+        conn.run('PRAGMA foreign_keys = ON;', function (err) {
+          cb(err, conn);
+        });
+      }
     }
   }, {
     client: 'postgres',

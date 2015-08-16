@@ -321,12 +321,7 @@ describe('integration tests', function () {
                 return session.knex('Person')
               })
               .then(function (rows) {
-                _.each(rows, function (row) {
-                  row.id = parseInt(row.id, 10);
-                  if (row.pid) {
-                    row.pid = parseInt(row.pid, 10);
-                  }
-                });
+                rows = integerIds(rows, 'id', 'pid');
                 expect(rows).to.have.length(numPersons - 1);
                 expect(_.pluck(rows, 'id').sort()).to.eql(_.without(_.range(1, 11), 3).sort());
               });
@@ -348,6 +343,46 @@ describe('integration tests', function () {
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons * numAnimalsPerPerson + 1);
                 expect(_.find(rows, {name: 'New pet'}).ownerId).to.eql(4);
+              });
+          });
+
+        });
+
+        describe('PUT /persons/:id/pets', function () {
+
+          it('should update existing, delete removed and insert new', function () {
+            return request
+              .put('http://localhost:3564/persons/4/pets')
+              .send([
+                {id: 34, name: 'Updated name 1'},
+                {id: 37, name: 'Updated name 2'},
+                {id: 99999, name: 'New 1'},
+                {name: 'New 2'}
+              ])
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                res.body = integerIds(res.body, 'id', 'ownerId');
+
+                expect(res.body).to.have.length(4);
+                expect(_.sortBy(res.body, 'id')).to.eql([
+                  {name: 'Updated name 1', id: 34, ownerId: 4},
+                  {name: 'Updated name 2', id: 37, ownerId: 4},
+                  {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                  {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                ]);
+
+                return session.knex('Animal');
+              })
+              .then(function (rows) {
+                rows = integerIds(rows, 'id', 'ownerId');
+
+                expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numAnimalsPerPerson - 4));
+                expect(_.sortBy(_.where(rows, {ownerId: 4}), 'id')).to.eql([
+                  {name: 'Updated name 1', id: 34, ownerId: 4},
+                  {name: 'Updated name 2', id: 37, ownerId: 4},
+                  {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                  {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                ]);
               });
           });
 
@@ -430,6 +465,55 @@ describe('integration tests', function () {
 
         });
 
+        describe('PUT /persons/:id/movies', function () {
+
+          it('should update existing, delete removed and insert new', function () {
+            return request
+              .put('http://localhost:3564/persons/7/movies')
+              .send([
+                {id: 64, name: 'Updated name 1'},
+                {id: 67, name: 'Updated name 2'},
+                {id: 99999, name: 'New 1'},
+                {name: 'New 2'}
+              ])
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                res.body = integerIds(res.body, 'id');
+
+                expect(res.body).to.have.length(4);
+                expect(_.sortBy(res.body, 'id')).to.eql([
+                  {name: 'Updated name 1', id: 64},
+                  {name: 'Updated name 2', id: 67},
+                  {name: 'New 1', id: numPersons * numMoviesPerPerson + 1},
+                  {name: 'New 2', id: numPersons * numMoviesPerPerson + 2}
+                ]);
+
+                return session.knex('Movie');
+              })
+              .then(function (rows) {
+                rows = integerIds(rows, 'id');
+
+                expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numMoviesPerPerson - 4));
+                expect(_.pluck(_.filter(rows, function (row) {
+                  return row.id > 60 && row.id <= 70;
+                }), 'id').sort()).to.eql([64, 67]);
+
+                return session.knex('Person_Movie');
+              })
+              .then(function (rows) {
+                rows = integerIds(rows, 'id', 'actorId', 'movieId');
+
+                expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numMoviesPerPerson - 4));
+                expect(_.where(rows, {actorId: 7})).to.have.length(4);
+
+                expect(_.where(rows, {actorId: 7, movieId: 64})).to.have.length(1);
+                expect(_.where(rows, {actorId: 7, movieId: 67})).to.have.length(1);
+                expect(_.where(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 1})).to.have.length(1);
+                expect(_.where(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 2})).to.have.length(1);
+              });
+          });
+
+        });
 
         describe('GET /persons/:id/movies', function () {
 
@@ -490,3 +574,18 @@ describe('integration tests', function () {
   });
 
 });
+
+function integerIds() {
+  var rows = _.first(arguments);
+  var cols = _.rest(arguments);
+
+  _.each(rows, function (row) {
+    _.each(cols, function (col) {
+      if (row[col]) {
+        row[col] = parseInt(row[col]);
+      }
+    });
+  });
+
+  return rows;
+}

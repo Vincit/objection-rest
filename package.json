@@ -36,7 +36,7 @@
   "dependencies": {
     "bluebird": "^2.9.24",
     "lodash": "^3.9.0",
-    "objection-find": "git://github.com/Vincit/objection-find.git#790778b"
+    "objection-find": "^0.1.1"
   },
   "devDependencies": {
     "body-parser": "^1.13.3",

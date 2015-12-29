@@ -47,7 +47,7 @@
     "knex": "^0.8.3",
     "mocha": "^2.2.4",
     "mysql": "^2.7.0",
-    "objection": "git://github.com/Vincit/moron.js.git#6e59ccf",
+    "objection": "^0.3.0",
     "pg": "^4.4.0",
     "sqlite3": "^3.0.8",
     "superagent": "^1.3.0",

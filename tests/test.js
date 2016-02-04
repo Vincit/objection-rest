@@ -567,6 +567,82 @@ describe('integration tests', function () {
 
         });
 
+        describe('DELETE /persons', function () {
+
+          it('should delete all persons', function () {
+            return request
+              .del('http://localhost:3564/persons')
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body.total).to.equal(numPersons);
+                return [
+                  session.knex('Person')
+                ];
+              }).spread(function (rows) {
+                expect(rows).to.have.length(0);
+              });
+          });
+
+          it('should delete a subset with filters', function () {
+            return request
+              .del('http://localhost:3564/persons')
+              .query({
+                "firstName:like": "F%",
+                "pets.name:lt": "P80",
+                "movies.name:gte": "M19",
+                "movies.name:lt": "M60"
+              })
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body.total).to.equal(4);
+                return session.knex('Person');
+              }).then(function (rows) {
+                expect(rows).to.have.length(6);
+              });
+          });
+
+        });
+
+        describe('PATCH /persons', function () {
+
+          it('should patch all persons', function () {
+            return request
+              .patch('http://localhost:3564/persons')
+              .send({age: 666})
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body.total).to.equal(numPersons);
+                return session.knex('Person').where({
+                  age: 666
+                });
+              }).then(function (rows) {
+                expect(rows).to.have.length(numPersons);
+              });
+          });
+
+          it('should patch a subset with filters', function () {
+            return request
+              .patch('http://localhost:3564/persons')
+              .query({
+                "firstName:like": "F%",
+                "pets.name:lt": "P80",
+                "movies.name:gte": "M19",
+                "movies.name:lt": "M60"
+              })
+              .send({age: 666})
+              .then(function (res) {
+                expect(res.status).to.equal(200);
+                expect(res.body.total).to.equal(4);
+                return session.knex('Person').where({
+                  age: 666
+                });
+              }).then(function (rows) {
+                expect(rows).to.have.length(4);
+              });
+          });
+
+        });
+
       });
 
     });

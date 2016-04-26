@@ -81,7 +81,7 @@ describe('integration tests', function () {
           var app = express().use(bodyParser.json());
 
           objectionRestGenerator(objection)
-            //.logger(console.log.bind(console))
+            .logger(console.log.bind(console))
             .addModel(Person)
             .addModel(Movie)
             .addModel(Animal)

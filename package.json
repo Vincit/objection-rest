@@ -1,6 +1,6 @@
 {
   "name": "objection-rest",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "REST API generator for objection.js models",
   "main": "objection-rest.js",
   "license": "MIT",

@@ -19,8 +19,22 @@ npm install objection objection-rest
 
 # Getting started
 
-TODO
+```
+var objection = require('objection');
+var ObjectionRest = require('objection-rest');
+var Person = require('./models/Person');
+var Movie = require('./models/Movie');
+
+ObjectionRest(objection)
+	.routePrefix('/api')
+	.addModel(Person, function(findQuery) {
+		// findQuery.registerFilter(...) see objection-find
+	})
+	.addModel(Movie)
+	.generate(app);
+```
 
 # API documentation
 
-TODO
+See [objection-find documentation](https://github.com/Vincit/objection-find) for
+the findQuery API.

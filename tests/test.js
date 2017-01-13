@@ -364,12 +364,22 @@ describe('integration tests', function () {
                 res.body = integerIds(res.body, 'id', 'ownerId');
 
                 expect(res.body).to.have.length(4);
-                expect(_.sortBy(res.body, 'id')).to.eql([
-                  {name: 'Updated name 1', id: 34, ownerId: 4},
-                  {name: 'Updated name 2', id: 37, ownerId: 4},
-                  {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
-                  {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
-                ]);
+                var items = _.sortBy(res.body, 'id');
+                if (items[2].name === 'New 1') {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 34, ownerId: 4},
+                    {name: 'Updated name 2', id: 37, ownerId: 4},
+                    {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                    {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                  ]);
+                } else {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 34, ownerId: 4},
+                    {name: 'Updated name 2', id: 37, ownerId: 4},
+                    {name: 'New 2', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                    {name: 'New 1', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                  ]);
+                }
 
                 return session.knex('Animal');
               })
@@ -377,12 +387,23 @@ describe('integration tests', function () {
                 rows = integerIds(rows, 'id', 'ownerId');
 
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numAnimalsPerPerson - 4));
-                expect(_.sortBy(_.where(rows, {ownerId: 4}), 'id')).to.eql([
-                  {name: 'Updated name 1', id: 34, ownerId: 4},
-                  {name: 'Updated name 2', id: 37, ownerId: 4},
-                  {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
-                  {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
-                ]);
+                var items = _.sortBy(_.where(rows, {ownerId: 4}), 'id');
+                expect(items).to.have.length(4);
+                if (items[2].name === 'New 1') {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 34, ownerId: 4},
+                    {name: 'Updated name 2', id: 37, ownerId: 4},
+                    {name: 'New 1', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                    {name: 'New 2', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                  ]);
+                } else {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 34, ownerId: 4},
+                    {name: 'Updated name 2', id: 37, ownerId: 4},
+                    {name: 'New 2', id: numPersons * numAnimalsPerPerson + 1, ownerId: 4},
+                    {name: 'New 1', id: numPersons * numAnimalsPerPerson + 2, ownerId: 4}
+                  ]);
+                }
               });
           });
 
@@ -481,12 +502,22 @@ describe('integration tests', function () {
                 res.body = integerIds(res.body, 'id');
 
                 expect(res.body).to.have.length(4);
-                expect(_.sortBy(res.body, 'id')).to.eql([
-                  {name: 'Updated name 1', id: 64},
-                  {name: 'Updated name 2', id: 67},
-                  {name: 'New 1', id: numPersons * numMoviesPerPerson + 1},
-                  {name: 'New 2', id: numPersons * numMoviesPerPerson + 2}
-                ]);
+                var items = _.sortBy(res.body, 'id');
+                if (items[2].name === 'New 1') {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 64},
+                    {name: 'Updated name 2', id: 67},
+                    {name: 'New 1', id: numPersons * numMoviesPerPerson + 1},
+                    {name: 'New 2', id: numPersons * numMoviesPerPerson + 2}
+                  ]);
+                } else {
+                  expect(items).to.eql([
+                    {name: 'Updated name 1', id: 64},
+                    {name: 'Updated name 2', id: 67},
+                    {name: 'New 2', id: numPersons * numMoviesPerPerson + 1},
+                    {name: 'New 1', id: numPersons * numMoviesPerPerson + 2}
+                  ]);
+                }
 
                 return session.knex('Movie');
               })

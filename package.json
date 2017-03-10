@@ -48,10 +48,10 @@
     "knex": "^0.10.0",
     "mocha": "^2.2.4",
     "mysql": "^2.7.0",
-    "objection": "^0.6.1",
     "pg": "^4.4.0",
     "sqlite3": "^3.0.8",
     "superagent": "^1.3.0",
     "superagent-bluebird-promise": "^2.0.2"
+    "objection": "^0.7.0",
   }
 }

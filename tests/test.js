@@ -126,8 +126,8 @@ describe('integration tests', function () {
               .then(function (res) {
                 expect(res.status).to.equal(200);
                 expect(res.body.total).to.equal(4);
-                expect(_.pluck(res.body.results, 'lastName')).to.eql([/*'L02', 'L03', */'L04', 'L05']);
-                expect(_.pluck(res.body.results, 'parent.lastName')).to.eql([/*'L03', 'L04', */'L05', 'L06']);
+                expect(_.map(res.body.results, 'lastName')).to.eql([/*'L02', 'L03', */'L04', 'L05']);
+                expect(_.map(res.body.results, 'parent.lastName')).to.eql([/*'L03', 'L04', */'L05', 'L06']);
               });
           });
 
@@ -173,7 +173,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons + 1);
-                expect(_.where(rows, {firstName: 'A', lastName: 'B'})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'A', lastName: 'B'})).to.have.length(1);
               });
           });
 
@@ -192,7 +192,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons);
-                expect(_.where(rows, {firstName: 'A', lastName: 'B', age: 666})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'A', lastName: 'B', age: 666})).to.have.length(1);
               });
           });
 
@@ -213,7 +213,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons);
-                expect(_.where(rows, {firstName: 'A', lastName: 'B', age: 666})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'A', lastName: 'B', age: 666})).to.have.length(1);
               });
           });
 
@@ -232,7 +232,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons);
-                expect(_.where(rows, {firstName: 'F05', lastName: 'L04', age: 666})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'F05', lastName: 'L04', age: 666})).to.have.length(1);
               });
           });
 
@@ -253,7 +253,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons);
-                expect(_.where(rows, {firstName: 'F05', lastName: 'L04', age: 777})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'F05', lastName: 'L04', age: 777})).to.have.length(1);
               });
           });
 
@@ -271,7 +271,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons - 1);
-                expect(_.where(rows, {firstName: 'F05', lastName: 'L04'})).to.have.length(0);
+                expect(_.filter(rows, {firstName: 'F05', lastName: 'L04'})).to.have.length(0);
               });
           });
 
@@ -290,7 +290,7 @@ describe('integration tests', function () {
               })
               .then(function (rows) {
                 expect(rows).to.have.length(numPersons + 1);
-                expect(_.where(rows, {firstName: 'New', lastName: 'Person'})).to.have.length(1);
+                expect(_.filter(rows, {firstName: 'New', lastName: 'Person'})).to.have.length(1);
                 expect(_.find(rows, {id: _.isString(rows[0].id) ? '4' : 4}).pid).to.eql(numPersons + 1);
               });
           });
@@ -323,7 +323,7 @@ describe('integration tests', function () {
               .then(function (rows) {
                 rows = integerIds(rows, 'id', 'pid');
                 expect(rows).to.have.length(numPersons - 1);
-                expect(_.pluck(rows, 'id').sort()).to.eql(_.without(_.range(1, 11), 3).sort());
+                expect(_.map(rows, 'id').sort()).to.eql(_.without(_.range(1, 11), 3).sort());
               });
           });
 
@@ -387,7 +387,7 @@ describe('integration tests', function () {
                 rows = integerIds(rows, 'id', 'ownerId');
 
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numAnimalsPerPerson - 4));
-                var items = _.sortBy(_.where(rows, {ownerId: 4}), 'id');
+                var items = _.sortBy(_.filter(rows, {ownerId: 4}), 'id');
                 expect(items).to.have.length(4);
                 if (items[2].name === 'New 1') {
                   expect(items).to.eql([
@@ -417,7 +417,7 @@ describe('integration tests', function () {
               .query({orderByDesc: 'name'})
               .then(function (res) {
                 expect(res.status).to.equal(200);
-                expect(_.pluck(res.body, 'name')).to.eql(['P39', 'P38', 'P37', 'P36', 'P35', 'P34', 'P33', 'P32', 'P31', 'P30']);
+                expect(_.map(res.body, 'name')).to.eql(['P39', 'P38', 'P37', 'P36', 'P35', 'P34', 'P33', 'P32', 'P31', 'P30']);
               });
           });
 
@@ -433,7 +433,7 @@ describe('integration tests', function () {
               })
               .then(function (res) {
                 expect(res.status).to.equal(200);
-                expect(_.pluck(res.body.results, 'name')).to.eql(['P36', 'P35']);
+                expect(_.map(res.body.results, 'name')).to.eql(['P36', 'P35']);
                 expect(res.body.total).to.equal(4);
               });
           });
@@ -474,13 +474,13 @@ describe('integration tests', function () {
               })
               .spread(function (rows, newId) {
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson + 1);
-                expect(_.where(rows, {name: 'New movie', id: newId})).to.have.length(1);
+                expect(_.filter(rows, {name: 'New movie', id: newId})).to.have.length(1);
                 return [session.knex('Person_Movie'), newId];
               })
               .spread(function (rows, newId) {
                 var personId = _.isString(newId) ? '4' : 4;
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson + 1);
-                expect(_.where(rows, {actorId: personId, movieId: newId})).to.have.length(1);
+                expect(_.filter(rows, {actorId: personId, movieId: newId})).to.have.length(1);
               });
           });
 
@@ -525,7 +525,7 @@ describe('integration tests', function () {
                 rows = integerIds(rows, 'id');
 
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numMoviesPerPerson - 4));
-                expect(_.pluck(_.filter(rows, function (row) {
+                expect(_.map(_.filter(rows, function (row) {
                   return row.id > 60 && row.id <= 70;
                 }), 'id').sort()).to.eql([64, 67]);
 
@@ -535,12 +535,12 @@ describe('integration tests', function () {
                 rows = integerIds(rows, 'id', 'actorId', 'movieId');
 
                 expect(rows).to.have.length(numPersons * numMoviesPerPerson - (numMoviesPerPerson - 4));
-                expect(_.where(rows, {actorId: 7})).to.have.length(4);
+                expect(_.filter(rows, {actorId: 7})).to.have.length(4);
 
-                expect(_.where(rows, {actorId: 7, movieId: 64})).to.have.length(1);
-                expect(_.where(rows, {actorId: 7, movieId: 67})).to.have.length(1);
-                expect(_.where(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 1})).to.have.length(1);
-                expect(_.where(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 2})).to.have.length(1);
+                expect(_.filter(rows, {actorId: 7, movieId: 64})).to.have.length(1);
+                expect(_.filter(rows, {actorId: 7, movieId: 67})).to.have.length(1);
+                expect(_.filter(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 1})).to.have.length(1);
+                expect(_.filter(rows, {actorId: 7, movieId: numPersons * numMoviesPerPerson + 2})).to.have.length(1);
               });
           });
 
@@ -554,7 +554,7 @@ describe('integration tests', function () {
               .query({orderByDesc: 'name'})
               .then(function (res) {
                 expect(res.status).to.equal(200);
-                expect(_.pluck(res.body, 'name')).to.eql(['M39', 'M38', 'M37', 'M36', 'M35', 'M34', 'M33', 'M32', 'M31', 'M30']);
+                expect(_.map(res.body, 'name')).to.eql(['M39', 'M38', 'M37', 'M36', 'M35', 'M34', 'M33', 'M32', 'M31', 'M30']);
               });
           });
 
@@ -570,7 +570,7 @@ describe('integration tests', function () {
               })
               .then(function (res) {
                 expect(res.status).to.equal(200);
-                expect(_.pluck(res.body.results, 'name')).to.eql(['M36', 'M35']);
+                expect(_.map(res.body.results, 'name')).to.eql(['M36', 'M35']);
                 expect(res.body.total).to.equal(4);
               });
           });
@@ -684,7 +684,7 @@ describe('integration tests', function () {
 
 function integerIds() {
   var rows = _.first(arguments);
-  var cols = _.rest(arguments);
+  var cols = _.tail(arguments);
 
   _.each(rows, function (row) {
     _.each(cols, function (col) {

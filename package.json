@@ -34,24 +34,24 @@
     "lib/*"
   ],
   "dependencies": {
-    "bluebird": "^2.9.24",
-    "colors": "^1.1.2",
-    "lodash": "^3.9.0",
+    "bluebird": "^3",
+    "colors": "^1",
+    "lodash": "^4",
     "objection-find": "^0.4.0"
   },
   "devDependencies": {
-    "body-parser": "^1.13.3",
-    "coveralls": "^2.11.2",
+    "body-parser": "^1",
+    "coveralls": "^2",
     "expect.js": "^0.3.1",
-    "express": "^4.13.3",
-    "istanbul": "^0.3.15",
-    "knex": "^0.10.0",
-    "mocha": "^2.2.4",
-    "mysql": "^2.7.0",
-    "pg": "^4.4.0",
-    "sqlite3": "^3.0.8",
-    "superagent": "^1.3.0",
-    "superagent-bluebird-promise": "^2.0.2"
+    "express": "^4",
+    "istanbul": "^0.4",
+    "knex": "^0.12",
+    "mocha": "^2",
+    "mysql": "^2",
     "objection": "^0.7.0",
+    "pg": "^6",
+    "sqlite3": "^3",
+    "superagent": "^1",
+    "superagent-bluebird-promise": "^2"
   }
 }

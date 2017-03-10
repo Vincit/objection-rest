@@ -19,7 +19,8 @@ module.exports = {
           cb(err, conn);
         });
       }
-    }
+    },
+    useNullAsDefault: true
   }, {
     client: 'postgres',
     connection: {

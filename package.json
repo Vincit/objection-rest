@@ -51,7 +51,7 @@
     "objection": "^0.7.0",
     "pg": "^6",
     "sqlite3": "^3",
-    "superagent": "^1",
-    "superagent-bluebird-promise": "^2"
+    "superagent": "^3",
+    "superagent-bluebird-promise": "^4"
   }
 }

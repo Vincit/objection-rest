@@ -37,7 +37,7 @@
     "bluebird": "^2.9.24",
     "colors": "^1.1.2",
     "lodash": "^3.9.0",
-    "objection-find": "^0.3.0"
+    "objection-find": "^0.4.0"
   },
   "devDependencies": {
     "body-parser": "^1.13.3",

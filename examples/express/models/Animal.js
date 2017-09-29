@@ -4,11 +4,8 @@ var Model = require('objection').Model;
  * @extends Model
  * @constructor
  */
-function Animal() {
-  Model.apply(this, arguments);
-}
+class Animal extends Model {}
 
-Model.extend(Animal);
 module.exports = Animal;
 
 // Table name is the only required property.

@@ -179,13 +179,9 @@ module.exports = {
 };
 
 function createModels(knex) {
-  var Person = function Person() {};
-  var Animal = function Animal() {};
-  var Movie = function Movie() {};
-
-  objection.Model.extend(Person);
-  objection.Model.extend(Animal);
-  objection.Model.extend(Movie);
+  class Person extends objection.Model {}
+  class Animal extends objection.Model {}
+  class Movie extends objection.Model {}
 
   Person.tableName = 'Person';
   Animal.tableName = 'Animal';

@@ -40,18 +40,18 @@
     "objection-find": "^0.5.0"
   },
   "devDependencies": {
-    "body-parser": "^1",
-    "coveralls": "^2",
+    "body-parser": "^1.18.2",
+    "coveralls": "^2.13.3",
     "expect.js": "^0.3.1",
-    "express": "^4",
+    "express": "^4.16.0",
     "istanbul": "^0.4",
-    "knex": "^0.12",
+    "knex": "^0.13.0",
     "mocha": "^2",
-    "mysql": "^2",
-    "pg": "^6",
-    "sqlite3": "^3",
-    "superagent": "^3",
+    "mysql": "^2.14.1",
     "objection": "^0.8.9",
+    "pg": "^7.3.0",
+    "sqlite3": "^3.1.13",
+    "superagent": "^3.6.1",
     "superagent-bluebird-promise": "^4"
   }
 }

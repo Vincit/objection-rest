@@ -24,9 +24,11 @@ var objection = require('objection');
 var ObjectionRest = require('objection-rest');
 var Person = require('./models/Person');
 var Movie = require('./models/Movie');
+var _ = require('lodash');
 
 ObjectionRest(objection)
 	.routePrefix('/api')
+	.routeFormat(_.kebabCase)
 	.addModel(Person, function(findQuery) {
 		// findQuery.registerFilter(...) see objection-find
 	})

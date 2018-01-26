@@ -82,7 +82,6 @@ describe('integration tests', function () {
 
           objectionRestGenerator(objection)
             .logger(console.log.bind(console))
-            .routeFormat(path => _.camelCase(path + 's'))
             .addModel(Person)
             .addModel(Movie)
             .addModel(Animal)
